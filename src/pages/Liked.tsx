@@ -1,9 +1,9 @@
 import InfiniteStoriesSection from "@/components/InfiniteStoriesSection";
-import type { Story } from "@/model/StoryDto";
+import type { StoryDto } from "@/model/StoryDto";
 import React, { useState } from "react";
 
 // Фіктивні дані для демонстрації результатів пошуку
-const dummyResults: Story[] = [
+const dummyResults: StoryDto[] = [
     {
         id: "1",
         title: "Story 1",
@@ -53,14 +53,14 @@ const dummyResults: Story[] = [
 
 const LikedPage: React.FC = () => {
     // Отримання параметра запиту з URL
-    const [stories, setStories] = useState<Story[]>(dummyResults);
+    const [stories, setStories] = useState<StoryDto[]>(dummyResults);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
     // Simulate fetching additional stories.
-    const fetchMoreStories = async (): Promise<Story[]> => {
+    const fetchMoreStories = async (): Promise<StoryDto[]> => {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const newStories: Story[] = Array.from({ length: 3 }, (_, i) => {
+                const newStories: StoryDto[] = Array.from({ length: 3 }, (_, i) => {
                     const id = (stories.length + i + 1).toString();
                     return {
                         id,

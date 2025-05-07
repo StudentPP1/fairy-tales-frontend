@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import CardItem from "@/components/Card";
-import type { Story } from "@/model/StoryDto";
+import type { StoryDto } from "@/model/StoryDto";
 
 interface InfiniteStoriesSectionProps {
-  stories: Story[];
-  fetchMoreStories: () => Promise<Story[]>;
+  stories: StoryDto[];
+  fetchMoreStories: () => Promise<StoryDto[]>;
   hasMore: boolean;
 }
 

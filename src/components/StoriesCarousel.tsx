@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CardItem from "@/components/Card";
-import type { Story } from "@/model/StoryDto";
+import type { StoryDto } from "@/model/StoryDto";
 
 interface AllStoriesCarouselProps {
-  stories: Story[];
-  fetchMoreStories: () => Promise<Story[]>;
+  stories: StoryDto[];
+  fetchMoreStories: () => Promise<StoryDto[]>;
   hasMore: boolean;
   itemsPerPage?: number;
 }

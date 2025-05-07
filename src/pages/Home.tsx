@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import StoriesCarousel from "../components/StoriesCarousel";
 import InfiniteStoriesSection from "../components/InfiniteStoriesSection";
-import type { Story } from "@/model/StoryDto";
+import type { StoryDto } from "@/model/StoryDto";
 
-const initialStories: Story[] = [
+const initialStories: StoryDto[] = [
   {
     id: "1",
     title: "Story 1",
@@ -47,14 +47,14 @@ const initialStories: Story[] = [
 ];
 
 const HomePage: React.FC = () => {
-  const [stories, setStories] = useState<Story[]>(initialStories);
+  const [stories, setStories] = useState<StoryDto[]>(initialStories);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   // Simulate fetching additional stories.
-  const fetchMoreStories = async (): Promise<Story[]> => {
+  const fetchMoreStories = async (): Promise<StoryDto[]> => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        const newStories: Story[] = Array.from({ length: 3 }, (_, i) => {
+        const newStories: StoryDto[] = Array.from({ length: 3 }, (_, i) => {
           const id = (stories.length + i + 1).toString();
           return {
             id,

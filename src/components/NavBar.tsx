@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 const NavBar: FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const navigate = useNavigate();
+  const isAdmin = true; // For demonstration, assume the user is an admin.
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -30,19 +31,31 @@ const NavBar: FC = () => {
 
   return (
     <nav className="flex items-center justify-between px-4 py-2 border-b">
-      {/* Left: Logo/empty */}
-      <div className="flex-1 cursor-pointer" onClick={() => navigate("/")} role="button" tabIndex={0} aria-label="Home">
-        Home
+      {/* Left: Logo & Create Story Button */}
+      <div className="flex-1 flex justify-start items-center">
+        <div className="flex cursor-pointer" onClick={() => navigate("/")} role="button" tabIndex={0} aria-label="Home">
+          Home
+        </div>
+        {isAdmin && (
+          <Button
+            variant="ghost"
+            role="button" tabIndex={1} aria-label="Create Story"
+            className="flex cursor-pointer"
+            onClick={() => navigate("/create-story")}
+          >
+            Create Story
+          </Button>
+        )}
       </div>
 
       {/* Center: Search Input з кнопкою очищення */}
-      <div className="flex-1 flex justify-center relative">
+      <div className="flex-1 flex justify-center relative justify-items-center">
         <Input
           placeholder="Search..."
           value={searchTerm}
           onChange={onSearchChange}
           onKeyDown={handleKeyDown}
-          className="max-w-md pr-10" // правий padding для "X"-кнопки
+          className="max-w pr-10" // правий padding для "X"-кнопки
         />
         {searchTerm && (
           <button
@@ -69,7 +82,7 @@ const NavBar: FC = () => {
       </div>
 
       {/* Right: Heart Button & User Avatar */}
-      <div className="flex-1 flex justify-end items-center space-x-4">
+      <div className="flex-1 flex justify-end items-center">
         <Button variant="ghost" className="p-2" onClick={() => navigate("/favorites")}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
