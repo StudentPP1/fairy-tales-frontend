@@ -1,9 +1,8 @@
 export type Story = {
+    text: string;
     id: string;
     title: string;
-    fullText: string;
     description: string;
     imageUrl: string;
-    liked: number;
-    read: boolean;
+    likedCount: number;
 }

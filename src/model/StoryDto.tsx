@@ -3,6 +3,5 @@ export type StoryDto = {
     title: string;
     description: string;
     imageUrl: string;
-    liked: number;
-    read: boolean;
+    likedCount: number;
 }
