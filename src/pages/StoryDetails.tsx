@@ -1,21 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, type FC } from "react";
+import { useState, useEffect, type FC, useContext } from "react";
 import type { Story } from "@/model/Story";
 import ChangeStory from "@/components/ChangeStory";
-
-const dummyStory: Story = {
-  id: "1",
-  title: "Story 1",
-  description: "Description for story 1",
-  imageUrl:
-    "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
-  liked: 10,
-  fullText: "Full text for story 1",
-  read: false,
-};
+import { AuthContext, type AuthState } from "@/context/AuthContext";
+import { StoryService } from "@/api/service/StoryService";
+import { UserService } from "@/api/service/UserService";
 
 const StoryDetailsPage: FC = () => {
+  const { user } = useContext<AuthState>(AuthContext);
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [story, setStory] = useState<Story | null>(null);
@@ -26,19 +19,20 @@ const StoryDetailsPage: FC = () => {
   const [updatedImageUrl, setUpdatedImageUrl] = useState<string>("");
   const [updatedDescription, setUpdatedDescription] = useState<string>("");
   const [updatedText, setUpdatedText] = useState<string>("");
-  const isAdmin = true; // Simulated admin check
+  const isAdmin = user?.role === "ADMIN";
 
-  // Simulate fetching the story data
   useEffect(() => {
-    setTimeout(() => {
-      setStory(dummyStory);
-      setUpdatedTitle(dummyStory.title);
-      setUpdatedImageUrl(dummyStory.imageUrl);
-      setUpdatedDescription(dummyStory.description);
-      setUpdatedText(dummyStory.fullText);
-      setIsRead(dummyStory.read);
-    }, 500);
-  }, [id, navigate]);
+    const fetchStory = async () => {
+      if (!id) return;
+      const fetchedStory = await StoryService.getStory(Number.parseInt(id));
+      setStory(fetchedStory);
+      setUpdatedTitle(fetchedStory.title);
+      setUpdatedImageUrl(fetchedStory.imageUrl);
+      setUpdatedDescription(fetchedStory.description);
+      setUpdatedText(fetchedStory.text);
+    }
+    fetchStory();
+  }, [id]);
 
   if (!story) return <p className="text-center p-8">Loading...</p>;
 
@@ -82,7 +76,15 @@ const StoryDetailsPage: FC = () => {
           {/* Action Icons: Like/Unlike & Read/Unread */}
           <div className="flex items-center space-x-4">
             <button
-              onClick={() => setIsFavorite(!isFavorite)}
+              onClick={async () => {
+                setIsFavorite(!isFavorite)
+                if (isFavorite) {
+                  await UserService.addLikedStory(story.id);
+                }
+                else {
+                  await UserService.removeLikedStory(story.id);
+                }
+              }}
               className="focus:outline-none"
               aria-label="Toggle Like"
             >
@@ -120,7 +122,15 @@ const StoryDetailsPage: FC = () => {
             </button>
 
             <button
-              onClick={() => setIsRead(!isRead)}
+              onClick={async () => {
+                setIsRead(!isRead)
+                if (isRead) {
+                  await UserService.addReadStory(story.id);
+                }
+                else {
+                  await UserService.removeReadStory(story.id);
+                }
+              }}
               className="focus:outline-none"
               aria-label="Toggle Read Status"
             >
@@ -172,35 +182,28 @@ const StoryDetailsPage: FC = () => {
 
       {/* Second Block: Full Text */}
       <div className="mt-6 bg-white shadow-lg rounded-lg p-6">
-        <p className="text-gray-700 leading-relaxed">{story.fullText}</p>
+        <p className="text-gray-700 leading-relaxed">{story.text}</p>
       </div>
     </div>
   );
 
   // --- Handlers ---
   function handleUpdate() {
-
-    // Dummy simulated API update delay
-    setTimeout(() => {
-      if (!story) return;
-      story.imageUrl = updatedImageUrl;
-      story.title = updatedTitle;
-      story.description = updatedDescription;
-      story.fullText = updatedText;
-      setStory(story)
-      setIsEditing(false);
-      alert("Story updated (dummy)");
-    }, 500);
+    if (!story) return;
+    story.imageUrl = updatedImageUrl;
+    story.title = updatedTitle;
+    story.description = updatedDescription;
+    story.text = updatedText;
+    setStory(story)
+    setIsEditing(false);
+    StoryService.updateStory(story.id, updatedTitle, updatedDescription, updatedImageUrl, updatedText)
   }
 
-  function handleDelete() {
-    if (window.confirm("Are you sure you want to delete this story?")) {
-      setTimeout(() => {
-        console.log("Deleting story", id);
-        alert("Story deleted (dummy)");
-        navigate("/");
-      }, 500);
-    }
+  async function handleDelete() {
+    if (!story) return;
+    await StoryService.deleteStory(story.id).then(() => {
+      navigate("/");
+    })
   }
 };
 

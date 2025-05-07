@@ -1,5 +1,5 @@
 export type StoryDto = {
-    id: string;
+    id: number;
     title: string;
     description: string;
     imageUrl: string;

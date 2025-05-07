@@ -3,11 +3,12 @@ import { log } from "@/utils/Logger";
 import { apiFetch } from "../utils/ApiUtils";
 import { RequestAttributes } from "../utils/RequestAttributes";
 import type { Page } from "@/model/Page";
+import type { Story } from "@/model/Story";
 
 export class StoryService {
   @log
-  static async getStory(storyId: number): Promise<StoryDto> {
-    return apiFetch<StoryDto>(
+  static async getStory(storyId: number): Promise<Story> {
+    return apiFetch<Story>(
       "/story/" + storyId,
       await RequestAttributes.builder().addAuthHeader().build()
     );

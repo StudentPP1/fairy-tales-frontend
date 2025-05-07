@@ -30,10 +30,12 @@ export class UserService {
   }
   
   @log
-  static async updateUser(): Promise<void> {
-    return apiFetch<void>(
+  static async updateUser(name: string, img: string): Promise<UserDto> {
+    return apiFetch<UserDto>(
       "/user/update",
-      await RequestAttributes.builder().setMethod("POST").addAuthHeader().build()
+      await RequestAttributes.builder()
+      .setBody({ name: name, img: img })
+      .setMethod("POST").addAuthHeader().build()
     );
   }
 

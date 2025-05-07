@@ -1,44 +1,44 @@
-import React, { useState } from "react";
+import { AuthService } from "@/api/service/AuthService";
+import { UserService } from "@/api/service/UserService";
+import { ACCESS_TOKEN_NAME } from "@/constant/constants";
+import { AuthContext, type AuthState } from "@/context/AuthContext";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const backendUrl = "https://YOUR_BACKEND_URL"; // Replace with your actual backend URL
 
 const AuthPage: React.FC = () => {
   const navigate = useNavigate();
+  const { setUser } = useContext<AuthState>(AuthContext);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
+  const authenticate = (result: any) => {
+    console.log("accessToken: ", result.accessToken)
+    sessionStorage.setItem(ACCESS_TOKEN_NAME, result.accessToken)
+    UserService.getUser()
+      .then((result: any) => { setUser(result) })
+      .then(() => { navigate("/home") })
+      .catch(() => { setUser(null) })
+  }
+  
   // Handles login or registration via email/password
   const handleLocalAuth = async () => {
     setError("");
-    const endpoint = isRegistering ? `${backendUrl}/register` : `${backendUrl}/login`;
-    const payload = isRegistering ? { name, email, password } : { email, password };
-
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.message || "Authentication failed");
-      } else {
-        // Upon success, navigate to the home page (or adjust according to your flows)
-        navigate("/");
-      }
-    } catch (err) {
-      setError("Network error or authentication failed");
+    if (isRegistering) {
+      AuthService.register(name, email, password)
+        .then((result: any) => { authenticate(result) })
+    }
+    else {
+      AuthService.login(email, password)
+        .then((result: any) => { authenticate(result) })
     }
   };
 
   // Redirects to the backend Google OAuth endpoint
   const handleGoogleAuth = () => {
-    window.location.href = `${backendUrl}/auth/google`;
+    AuthService.google()
   };
 
   return (

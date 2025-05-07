@@ -1,14 +1,14 @@
-import React, { useState, type FC } from "react";
+import React, { useContext, useState, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { AuthContext, type AuthState } from "@/context/AuthContext";
 
 const NavBar: FC = () => {
+  const { user } = useContext<AuthState>(AuthContext);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const navigate = useNavigate();
-  const isAdmin = true; // For demonstration, assume the user is an admin.
-  const user = false;
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -37,7 +37,7 @@ const NavBar: FC = () => {
         <div className="flex cursor-pointer" onClick={() => navigate("/")} role="button" tabIndex={0} aria-label="Home">
           Home
         </div>
-        {isAdmin && (
+        {user?.role === "ADMIN" && (
           <Button
             variant="ghost"
             role="button" tabIndex={1} aria-label="Create Story"

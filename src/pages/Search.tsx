@@ -1,100 +1,81 @@
-import InfiniteStoriesSection from "@/components/InfiniteStoriesSection";
+import { StoryService } from "@/api/service/StoryService";
+import CardItem from "@/components/Card";
 import type { StoryDto } from "@/model/StoryDto";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-// Фіктивні дані для демонстрації результатів пошуку
-const dummyResults: StoryDto[] = [
-  {
-    id: "1",
-    title: "Story 1",
-    description: "Description for story 1",
-    imageUrl:
-      "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
-    liked: 10,
-    read: true,
-  },
-  {
-    id: "2",
-    title: "Story 2",
-    description: "Description for story 2",
-    imageUrl:
-      "https://images.squarespace-cdn.com/content/v1/5493706de4b0ecaa4047b871/b54492bc-c791-4a31-bedd-db4baee85aff/When+Do+Hippos+Play+Cover+Thumbnail.jpeg",
-    liked: 1,
-    read: false,
-  },
-  {
-    id: "3",
-    title: "Story 3",
-    description: "Description for story 3",
-    imageUrl:
-      "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
-    liked: 2,
-    read: false,
-  },
-  {
-    id: "4",
-    title: "Story 4",
-    description: "Description for story 4",
-    imageUrl:
-      "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
-    liked: 3,
-    read: true,
-  },
-  {
-    id: "5",
-    title: "Story 5",
-    description: "Description for story 5",
-    imageUrl:
-      "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
-    liked: 0,
-    read: false,
-  },
-];
-
 const SearchPage: React.FC = () => {
-  // Отримання параметра запиту з URL
   const { search } = useLocation();
-  const [stories, setStories] = useState<StoryDto[]>(dummyResults);
-  const searchQuery = new URLSearchParams(search).get("query") || "";
+  const searchQuery = new URLSearchParams(search).get("query");
+  const [stories, setStories] = useState<StoryDto[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
-  // Simulate fetching additional stories.
-  const fetchMoreStories = async (): Promise<StoryDto[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const newStories: StoryDto[] = Array.from({ length: 3 }, (_, i) => {
-          const id = (stories.length + i + 1).toString();
-          return {
-            id,
-            title: `Story ${id}`,
-            description: `Description for story ${id}`,
-            imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
-            liked: Math.random() * 10,
-            read: Math.random() > 0.5,
-          };
-        });
-        setStories((prevStories) => {
-          const updated = [...prevStories, ...newStories];
-          if (updated.length >= 50) {
-            setHasMore(false);
+  const loaderRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && hasMore && !loading) {
+          setLoading(true);
+          if (!searchQuery) return;
+          const response = await StoryService.searchStories(searchQuery, currentPage + 1, itemsPerPage);
+
+          if (response.content.length > 0) {
+            setStories((prev) => [...prev, ...response.content]);
+            setHasMore(!response.last);
+            setCurrentPage(response.number);
           }
-          return updated;
-        });
-        resolve(newStories);
-      }, 1500);
-    });
-  };
+
+          setLoading(false);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, loading]);
+
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Search results</h1>
-      {dummyResults.length > 0 ? (
+      {stories.length > 0 ? (
         <section>
-          <InfiniteStoriesSection
-            stories={stories}
-            fetchMoreStories={fetchMoreStories}
-            hasMore={hasMore}
-          />
+          <div className="container mx-auto px-4 py-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center">
+              {stories.map((story) => (
+                <div key={story.id} className="w-full max-w-sm flex-shrink-0">
+                  <CardItem story={story} />
+                </div>
+              ))}
+            </div>
+            {hasMore && (
+              <div ref={loaderRef} className="flex items-center justify-center py-4">
+                {loading ? (
+                  <div className="flex items-center">
+                    <svg
+                      className="animate-spin h-6 w-6 text-gray-500 mr-2"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Loading more stories...</span>
+                  </div>
+                ) : (
+                  <span>Scroll down to load more</span>
+                )}
+              </div>
+            )}
+          </div>
         </section>
       ) : (
         <p>Not found</p>

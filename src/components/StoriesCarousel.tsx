@@ -2,98 +2,75 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CardItem from "@/components/Card";
 import type { StoryDto } from "@/model/StoryDto";
+import type { Page } from "@/model/Page";
 
-interface AllStoriesCarouselProps {
+interface StoriesCarouselProps {
   stories: StoryDto[];
-  fetchMoreStories: () => Promise<StoryDto[]>;
+  setStories: React.Dispatch<React.SetStateAction<StoryDto[]>>;
+  fetchMoreStories: (page: number, size: number) => Promise<Page<StoryDto>>;
   hasMore: boolean;
+  setHasMore: React.Dispatch<React.SetStateAction<boolean>>;
   itemsPerPage?: number;
 }
 
-const StoriesCarousel: React.FC<AllStoriesCarouselProps> = ({
+const StoriesCarousel: React.FC<StoriesCarouselProps> = ({
   stories,
+  setStories,
   fetchMoreStories,
   hasMore,
+  setHasMore,
   itemsPerPage = 3,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  // Recalculate pages based on the latest number of stories.
   const numPages = Math.ceil(stories.length / itemsPerPage);
-
-  const displayedStories = stories.slice(
-    currentPage * itemsPerPage,
-    currentPage * itemsPerPage + itemsPerPage
-  );
+  const displayedStories = stories.slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage);
 
   const handlePrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
+    if (currentPage > 0) setCurrentPage((prev) => prev - 1);
   };
 
   const handleNext = async () => {
-    // If there are more pages locally, simply paginate.
     if (currentPage < numPages - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-    // Otherwise, if more stories can be fetched, load them.
-    else if (hasMore && !loadingMore) {
-      setLoadingMore(true);
-      await fetchMoreStories();
-      setLoadingMore(false);
-      // After new stories are in place, recalculate page count and move to next page.
       setCurrentPage((prev) => prev + 1);
+    } else if (hasMore && !loadingMore) {
+      setLoadingMore(true);
+      const response = await fetchMoreStories(currentPage + 1, itemsPerPage);
+
+      if (response.content.length > 0) {
+        setStories((prev) => {
+          const updatedStories = [...prev, ...response.content];
+          setHasMore(!response.last); 
+          return updatedStories;
+        });
+
+        setCurrentPage((prev) => prev + 1);
+      }
+
+      setLoadingMore(false);
     }
   };
 
   return (
     <div className="relative w-full flex items-center justify-center">
-
-      <div className="relative w-full flex items-center justify-center">
-        {currentPage > 0 && (
-          <Button
-            onClick={handlePrev}
-            variant="ghost"
-            className="transform -translate-y-1/2 -translate-x-1/2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Button>
-        )}
-        
-        <div className="flex space-x-6 p-4">
-          {displayedStories.map((story) => (
-            <CardItem story={story} />
-          ))}
-        </div>
-
-        {(currentPage < numPages - 1 || (hasMore && !loadingMore)) && (
-        <Button
-          onClick={handleNext}
-          variant="ghost"
-          className="transform -translate-y-1/2 translate-x-1/2"
-          disabled={loadingMore}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+      {currentPage > 0 && (
+        <Button onClick={handlePrev} variant="ghost" className="absolute left-0">
+          {"<"}
         </Button>
       )}
+
+      <div className="flex space-x-6 p-4">
+        {displayedStories.map((story) => (
+          <CardItem key={story.id} story={story} />
+        ))}
       </div>
 
+      {(currentPage < numPages - 1 || (hasMore && !loadingMore)) && (
+        <Button onClick={handleNext} variant="ghost" className="absolute right-0" disabled={loadingMore}>
+          {">"}
+        </Button>
+      )}
     </div>
   );
 };
