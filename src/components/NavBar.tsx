@@ -2,7 +2,7 @@ import React, { useState, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import UserAvatarDropdown from "./UserAvatarDropdown";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const NavBar: FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -31,7 +31,9 @@ const NavBar: FC = () => {
   return (
     <nav className="flex items-center justify-between px-4 py-2 border-b">
       {/* Left: Logo/empty */}
-      <div className="flex-1" />
+      <div className="flex-1 cursor-pointer" onClick={() => navigate("/")} role="button" tabIndex={0} aria-label="Home">
+        Home
+      </div>
 
       {/* Center: Search Input з кнопкою очищення */}
       <div className="flex-1 flex justify-center relative">
@@ -85,7 +87,17 @@ const NavBar: FC = () => {
           </svg>
         </Button>
 
-        <UserAvatarDropdown />
+        <Button variant="ghost" className="p-2" onClick={() => navigate("/setting")}>
+          <Avatar className="cursor-pointer">
+            <AvatarImage
+              src="https://cs4.pikabu.ru/post_img/big/2016/06/12/6/1465724507186691432.jpg"
+              alt="User Avatar"
+              className="h-10 w-10"
+            />
+            <AvatarFallback />
+          </Avatar>
+        </Button>
+
       </div>
     </nav>
   );

@@ -2,6 +2,7 @@ import { useAuth } from "@/context/AuthContext";
 import HomePage from "@/pages/Home";
 import LikedPage from "@/pages/Liked";
 import SearchPage from "@/pages/Search";
+import UserSettingsPage from "@/pages/Settings";
 import React, { type JSX } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -24,6 +25,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/favorites" element={<LikedPage />} />
       <Route path="/search" element={<SearchPage />} />
+      <Route path="/setting" element={<UserSettingsPage />} />
       {/* Приклад захищеного маршруту */}
       <Route
         path="/dashboard"
