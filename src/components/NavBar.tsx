@@ -8,6 +8,7 @@ const NavBar: FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const navigate = useNavigate();
   const isAdmin = true; // For demonstration, assume the user is an admin.
+  const user = false;
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -83,7 +84,7 @@ const NavBar: FC = () => {
 
       {/* Right: Heart Button & User Avatar */}
       <div className="flex-1 flex justify-end items-center">
-        <Button variant="ghost" className="p-2" onClick={() => navigate("/favorites")}>
+        <Button variant="ghost" className="p-2" onClick={() => {user ? navigate("/favorites") : navigate("/login")}}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-red-500"
@@ -100,7 +101,7 @@ const NavBar: FC = () => {
           </svg>
         </Button>
 
-        <Button variant="ghost" className="p-2" onClick={() => navigate("/setting")}>
+        <Button variant="ghost" className="p-2" onClick={() => {user ? navigate("/settings") : navigate("/login")}}>
           <Avatar className="cursor-pointer">
             <AvatarImage
               src="https://cs4.pikabu.ru/post_img/big/2016/06/12/6/1465724507186691432.jpg"

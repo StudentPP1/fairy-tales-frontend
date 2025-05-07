@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
+import AuthPage from "@/pages/Auth";
 import CreateStoryPage from "@/pages/CreateStory";
 import HomePage from "@/pages/Home";
 import LikedPage from "@/pages/Liked";
@@ -25,6 +26,7 @@ const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<AuthPage />} />
       <Route path="/favorites" element={<LikedPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/setting" element={<UserSettingsPage />} />

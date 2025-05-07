@@ -5,8 +5,9 @@ import type { FC } from "react";
 import { Link } from "react-router-dom";
 
 const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
+    const user = false;
     return (
-        <Link to={`/story/${story.id}`}>
+        <Link to={user ? `/story/${story.id}` : `/login`}>
             <Card
                 key={story.id}
                 className="w-80 flex-shrink-0 rounded-lg shadow-lg bg-white hover:shadow-2xl transition duration-300 cursor-pointer"
