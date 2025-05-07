@@ -68,7 +68,7 @@ const NavBar: FC = () => {
 
       {/* Right: Heart Button & User Avatar */}
       <div className="flex-1 flex justify-end items-center space-x-4">
-        <Button variant="ghost" className="p-2">
+        <Button variant="ghost" className="p-2" onClick={() => navigate("/favorites")}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-red-500"
@@ -84,6 +84,7 @@ const NavBar: FC = () => {
             />
           </svg>
         </Button>
+
         <UserAvatarDropdown />
       </div>
     </nav>
