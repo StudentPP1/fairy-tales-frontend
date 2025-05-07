@@ -1,15 +1,7 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-export interface Story {
-  id: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  liked: boolean;
-  read: boolean;
-}
+import CardItem from "@/components/Card";
+import type { Story } from "@/model/StoryDto";
 
 interface AllStoriesCarouselProps {
   stories: Story[];
@@ -56,47 +48,37 @@ const StoriesCarousel: React.FC<AllStoriesCarouselProps> = ({
 
   return (
     <div className="relative w-full flex items-center justify-center">
-      <div className="flex space-x-4">
-        {displayedStories.map((story) => (
-          <Card key={story.id} className="min-w-[200px] shadow flex-shrink-0">
-            <img
-              src={story.imageUrl}
-              alt={story.title}
-              className="object-cover h-40 w-full"
-            />
-            <CardHeader>
-              <CardTitle>{story.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>{story.description}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
 
-      {currentPage > 0 && (
-        <Button
-          onClick={handlePrev}
-          variant="ghost"
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+      <div className="relative w-full flex items-center justify-center">
+        {currentPage > 0 && (
+          <Button
+            onClick={handlePrev}
+            variant="ghost"
+            className="transform -translate-y-1/2 -translate-x-1/2"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </Button>
-      )}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Button>
+        )}
+        
+        <div className="flex space-x-6 p-4">
+          {displayedStories.map((story) => (
+            <CardItem story={story} />
+          ))}
+        </div>
 
-      {(currentPage < numPages - 1 || (hasMore && !loadingMore)) && (
+        {(currentPage < numPages - 1 || (hasMore && !loadingMore)) && (
         <Button
           onClick={handleNext}
           variant="ghost"
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2"
+          className="transform -translate-y-1/2 translate-x-1/2"
           disabled={loadingMore}
         >
           <svg
@@ -110,6 +92,8 @@ const StoriesCarousel: React.FC<AllStoriesCarouselProps> = ({
           </svg>
         </Button>
       )}
+      </div>
+
     </div>
   );
 };

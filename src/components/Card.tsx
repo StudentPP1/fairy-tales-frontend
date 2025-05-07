@@ -1,0 +1,31 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Story } from "@/model/StoryDto";
+import type { FC } from "react";
+
+const CardItem: FC<{ story: Story }> = ({ story }) => {
+    return (
+        <Card
+            key={story.id}
+            className="w-80 flex-shrink-0 rounded-lg shadow-lg bg-white hover:shadow-2xl transition duration-300"
+        >
+            <div className="relative w-full h-60 overflow-hidden">
+                <img
+                    src={story.imageUrl}
+                    alt={story.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
+                />
+            </div>
+            <CardHeader className="p-4">
+                <CardTitle className="text-xl font-bold text-gray-800">
+                    {story.title}
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+                <p className="text-gray-600 text-sm">{story.description}</p>
+            </CardContent>
+        </Card>
+    )
+}
+
+export default CardItem;

@@ -1,54 +1,53 @@
 import React, { useState } from "react";
-import NavBar from "./NavBar";
-import StoriesCarousel, { type Story } from "./StoriesCarousel";
-import InfiniteStoriesSection from "./InfiniteStoriesSection";
+import NavBar from "../components/NavBar";
+import StoriesCarousel from "../components/StoriesCarousel";
+import InfiniteStoriesSection from "../components/InfiniteStoriesSection";
+import type { Story } from "@/model/StoryDto";
 
-// Dummy initial data for demonstration
 const initialStories: Story[] = [
   {
     id: "1",
     title: "Story 1",
     description: "Description for story 1",
-    imageUrl: "https://via.placeholder.com/300x200",
-    liked: true,
+    imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
+    liked: 10,
     read: true,
   },
   {
     id: "2",
     title: "Story 2",
     description: "Description for story 2",
-    imageUrl: "https://via.placeholder.com/300x200",
-    liked: true,
+    imageUrl: "https://images.squarespace-cdn.com/content/v1/5493706de4b0ecaa4047b871/b54492bc-c791-4a31-bedd-db4baee85aff/When+Do+Hippos+Play+Cover+Thumbnail.jpeg",
+    liked: 1,
     read: false,
   },
   {
     id: "3",
     title: "Story 3",
     description: "Description for story 3",
-    imageUrl: "https://via.placeholder.com/300x200",
-    liked: false,
+    imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
+    liked: 2,
     read: false,
   },
   {
     id: "4",
     title: "Story 4",
     description: "Description for story 4",
-    imageUrl: "https://via.placeholder.com/300x200",
-    liked: true,
+    imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
+    liked: 3,
     read: true,
   },
   {
     id: "5",
     title: "Story 5",
     description: "Description for story 5",
-    imageUrl: "https://via.placeholder.com/300x200",
-    liked: false,
+    imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
+    liked: 0,
     read: false,
   },
-  // Add more initial stories as needed...
 ];
 
-const StoriesPage: React.FC = () => {
+const Home: React.FC = () => {
   const [stories, setStories] = useState<Story[]>(initialStories);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -67,8 +66,8 @@ const StoriesPage: React.FC = () => {
             id,
             title: `Story ${id}`,
             description: `Description for story ${id}`,
-            imageUrl: "https://via.placeholder.com/300x200",
-            liked: Math.random() > 0.5,
+            imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
+            liked: Math.random() * 10,
             read: Math.random() > 0.5,
           };
         });
@@ -98,7 +97,7 @@ const StoriesPage: React.FC = () => {
       <main className="p-4 space-y-10">
         {/* Most Liked Stories Section */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">All Stories</h2>
+          <h2 className="text-xl font-semibold text-center mb-4">Most Liked Stories</h2>
           <StoriesCarousel
             stories={filteredStories}
             fetchMoreStories={fetchMoreStories}
@@ -108,7 +107,7 @@ const StoriesPage: React.FC = () => {
 
         {/* Not Read Stories Section */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">All Stories</h2>
+          <h2 className="text-xl font-semibold text-center mb-4">Not Read Stories</h2>
           <StoriesCarousel
             stories={filteredStories}
             fetchMoreStories={fetchMoreStories}
@@ -118,7 +117,7 @@ const StoriesPage: React.FC = () => {
 
         {/* All Stories Section with infinite scrolling triggered by end of page */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">All Stories</h2>
+          <h2 className="text-xl font-semibold text-center mb-4">All Stories</h2>
           <InfiniteStoriesSection
             stories={filteredStories}
             fetchMoreStories={fetchMoreStories}
@@ -130,4 +129,4 @@ const StoriesPage: React.FC = () => {
   );
 };
 
-export default StoriesPage;
+export default Home;
