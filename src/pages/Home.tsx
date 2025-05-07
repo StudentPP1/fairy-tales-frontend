@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavBar from "../components/NavBar";
 import StoriesCarousel from "../components/StoriesCarousel";
 import InfiniteStoriesSection from "../components/InfiniteStoriesSection";
 import type { Story } from "@/model/StoryDto";
@@ -47,14 +46,9 @@ const initialStories: Story[] = [
   },
 ];
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   const [stories, setStories] = useState<Story[]>(initialStories);
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const [hasMore, setHasMore] = useState<boolean>(true);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   // Simulate fetching additional stories.
   const fetchMoreStories = async (): Promise<Story[]> => {
@@ -66,7 +60,7 @@ const Home: React.FC = () => {
             id,
             title: `Story ${id}`,
             description: `Description for story ${id}`,
-            imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
+             imageUrl: "https://i.pinimg.com/736x/b8/78/97/b878975dc2ba1407777ba8f7f243ee8d.jpg",
             liked: Math.random() * 10,
             read: Math.random() > 0.5,
           };
@@ -83,23 +77,15 @@ const Home: React.FC = () => {
     });
   };
 
-  // Filter stories based on the search term
-  const filteredStories = stories.filter(
-    (story) =>
-      story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      story.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="min-h-screen">
-      <NavBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
 
       <main className="p-4 space-y-10">
         {/* Most Liked Stories Section */}
         <section>
           <h2 className="text-xl font-semibold text-center mb-4">Most Liked Stories</h2>
           <StoriesCarousel
-            stories={filteredStories}
+            stories={stories}
             fetchMoreStories={fetchMoreStories}
             hasMore={hasMore}
           />
@@ -107,9 +93,9 @@ const Home: React.FC = () => {
 
         {/* Not Read Stories Section */}
         <section>
-          <h2 className="text-xl font-semibold text-center mb-4">Not Read Stories</h2>
+        <h2 className="text-xl font-semibold text-center mb-4">Not Read Stories</h2>
           <StoriesCarousel
-            stories={filteredStories}
+            stories={stories}
             fetchMoreStories={fetchMoreStories}
             hasMore={hasMore}
           />
@@ -117,9 +103,9 @@ const Home: React.FC = () => {
 
         {/* All Stories Section with infinite scrolling triggered by end of page */}
         <section>
-          <h2 className="text-xl font-semibold text-center mb-4">All Stories</h2>
+        <h2 className="text-xl font-semibold text-center mb-4">All Stories</h2>
           <InfiniteStoriesSection
-            stories={filteredStories}
+            stories={stories}
             fetchMoreStories={fetchMoreStories}
             hasMore={hasMore}
           />
@@ -129,4 +115,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;

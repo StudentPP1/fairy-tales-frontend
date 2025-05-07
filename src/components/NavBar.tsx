@@ -1,30 +1,71 @@
-// NavBar.tsx
-import React from "react";
+import React, { useState, type FC } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UserAvatarDropdown from "./UserAvatarDropdown";
 
-interface NavBarProps {
-  searchTerm: string;
-  onSearchChange: React.ChangeEventHandler<HTMLInputElement>;
-}
+const NavBar: FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const navigate = useNavigate();
 
-const NavBar: React.FC<NavBarProps> = ({ searchTerm, onSearchChange }) => {
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Обробка натискання клавіші Enter у полі пошуку
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (searchTerm.trim()) {
+        navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
+      }
+    }
+  };
+
+  // Функція очищення пошукового запиту та повернення на головну сторінку
+  const clearSearch = () => {
+    setSearchTerm("");
+    navigate("/");
+  };
+
   return (
     <nav className="flex items-center justify-between px-4 py-2 border-b">
       {/* Left: Logo/empty */}
       <div className="flex-1" />
-      
-      {/* Center: Search Input */}
-      <div className="flex-1 flex justify-center">
+
+      {/* Center: Search Input з кнопкою очищення */}
+      <div className="flex-1 flex justify-center relative">
         <Input
           placeholder="Search..."
           value={searchTerm}
           onChange={onSearchChange}
-          className="max-w-md"
+          onKeyDown={handleKeyDown}
+          className="max-w-md pr-10" // правий padding для "X"-кнопки
         />
+        {searchTerm && (
+          <button
+            onClick={clearSearch}
+            className="absolute inset-y-0 right-0 flex items-center pr-3"
+            aria-label="Clear search"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-gray-400 hover:text-gray-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        )}
       </div>
-      
+
       {/* Right: Heart Button & User Avatar */}
       <div className="flex-1 flex justify-end items-center space-x-4">
         <Button variant="ghost" className="p-2">
@@ -43,12 +84,7 @@ const NavBar: React.FC<NavBarProps> = ({ searchTerm, onSearchChange }) => {
             />
           </svg>
         </Button>
-        <Button variant="ghost" className="p-2">
-          <Avatar>
-            <AvatarImage src="https://via.placeholder.com/40" alt="User Avatar" />
-            <AvatarFallback>UA</AvatarFallback>
-          </Avatar>
-        </Button>
+        <UserAvatarDropdown />
       </div>
     </nav>
   );
