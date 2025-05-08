@@ -16,6 +16,7 @@ export async function refreshToken() {
         })
       );
     } else {
+      console.log("Token refreshed successfully", token);
       sessionStorage.setItem(ACCESS_TOKEN_NAME, token.accessToken);
     }
   });

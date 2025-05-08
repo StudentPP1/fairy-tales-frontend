@@ -10,11 +10,12 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${url}`, attributes);
   const json = await response.json();
+  console.log("API response:", json);
   
   if (!response.ok) {
-    if (retry) {
+    if (retry && response.status === 403) {
       try {
-        console.log("Token expired, refreshing...");
+        console.log("Retrying with token refresh...");
         await refreshToken();
         return apiFetch<T>(url, attributes, false); 
       } catch (refreshError) {
@@ -24,7 +25,7 @@ export async function apiFetch<T>(
 
     fetchErrorEvent.dispatchEvent(
       new CustomEvent("api-fetch-error", {
-        detail: { errorEntity: response },
+        detail: { errorEntity: json },
       })
     );
 
