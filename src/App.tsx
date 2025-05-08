@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import NavBar from "./components/NavBar";
+import { ToastContainer } from "react-toastify";
+import { useEffect, useState, type FC } from "react";
+import type { UserDto } from "./model/UserDto";
+import { ACCESS_TOKEN_NAME } from "./constant/constants";
+import { refreshToken } from "./api/service/TokenService";
+import { UserService } from "./api/service/UserService";
+import { AuthContext } from "./context/AuthContext";
+import { AppRoutes } from "./router/AppRoutes";
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App: FC = () => {
+  const [user, setUser] = useState<UserDto | null>(null);
+
+  useEffect(() => {
+    console.log("refresh Token")
+    refreshToken().then(() => {
+      if (sessionStorage.getItem(ACCESS_TOKEN_NAME) != null) {
+        console.log("get User")
+        UserService.getUser()
+          .then((result: any) => { setUser(result) })
+          .catch(() => { setUser(null) })
+      }
+    })
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <ToastContainer theme="dark" style={{ zIndex: 1000 }} />
+      <AuthContext.Provider value={{ user, setUser }}>
+        <AppRoutes />
+      </AuthContext.Provider>
+    </div>
   )
 }
-
-export default App
