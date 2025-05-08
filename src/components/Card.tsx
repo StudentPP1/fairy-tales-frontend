@@ -25,7 +25,7 @@ const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
                 <CardHeader className="p-4">
                     <CardTitle className="text-xl font-bold text-gray-800">
                         {story.title}
-                        <div>
+                        <div className="flex items-center mt-2 text-gray-500">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="red"
@@ -40,7 +40,9 @@ const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
                                     d="M4.318 6.318A4.5 4.5 0 0112 3a4.5 4.5 0 017.682 3.318c0 1.61-.77 3.22-2.318 4.808L12 21.5l-5.364-10.374C5.088 9.537 4.318 7.928 4.318 6.318z"
                                 />
                             </svg>
-                            {story.likedCount}
+                            <div className="ml-2 text-md font-semibold text-gray-700">
+                                {story.likedCount}
+                            </div>
                         </div>
                     </CardTitle>
                 </CardHeader>
