@@ -3,4 +3,5 @@ export type UserDto = {
     img?: string;
     email: string;
     role: string;
+    isSubscribed: boolean;
 }

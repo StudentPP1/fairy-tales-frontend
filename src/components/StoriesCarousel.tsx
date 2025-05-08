@@ -5,8 +5,8 @@ import type { StoryDto } from "@/model/StoryDto";
 import type { Page } from "@/model/Page";
 
 interface StoriesCarouselProps {
-  stories: StoryDto[];
-  setStories: React.Dispatch<React.SetStateAction<StoryDto[]>>;
+  stories: Page<StoryDto> | null;
+  setStories: React.Dispatch<React.SetStateAction<Page<StoryDto> | null>>;
   fetchMoreStories: (page: number, size: number) => Promise<Page<StoryDto>>;
   hasMore: boolean;
   setHasMore: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,8 +24,8 @@ const StoriesCarousel: React.FC<StoriesCarouselProps> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  const numPages = Math.ceil(stories.length / itemsPerPage);
-  const displayedStories = stories.slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage);
+  const numPages = stories ? Math.ceil(stories.totalElements / itemsPerPage) : 0;
+  const displayedStories = stories?.content.slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage);
 
   const handlePrev = () => {
     if (currentPage > 0) setCurrentPage((prev) => prev - 1);
@@ -37,20 +37,20 @@ const StoriesCarousel: React.FC<StoriesCarouselProps> = ({
     } else if (hasMore && !loadingMore) {
       setLoadingMore(true);
       const response = await fetchMoreStories(currentPage + 1, itemsPerPage);
-
+  
       if (response.content.length > 0) {
         setStories((prev) => {
-          const updatedStories = [...prev, ...response.content];
-          setHasMore(!response.last); 
-          return updatedStories;
+          if (!prev) return response; // Handle null case
+          return { ...prev, content: [...prev.content, ...response.content] };
         });
-
+  
+        setHasMore(!response.last);
         setCurrentPage((prev) => prev + 1);
       }
-
+  
       setLoadingMore(false);
     }
-  };
+  };  
 
   return (
     <div className="relative w-full flex items-center justify-center">
@@ -61,7 +61,7 @@ const StoriesCarousel: React.FC<StoriesCarouselProps> = ({
       )}
 
       <div className="flex space-x-6 p-4">
-        {displayedStories.map((story) => (
+        {displayedStories?.map((story) => (
           <CardItem key={story.id} story={story} />
         ))}
       </div>

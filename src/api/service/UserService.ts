@@ -3,13 +3,14 @@ import { apiFetch } from "../utils/ApiUtils";
 import { RequestAttributes } from "../utils/RequestAttributes";
 import { log } from "@/utils/Logger";
 import type { StoryDto } from "@/model/StoryDto";
+import { FRONT_URL } from "@/constant/constants";
 
 export class UserService {
   @log
   static async getUser(): Promise<UserDto> {
     return apiFetch<UserDto>(
       "/user",
-      await RequestAttributes.builder().addAuthHeader().build()
+      await RequestAttributes.builder().addHeader("Access-Control-Allow-Origin", FRONT_URL).addAuthHeader().build()
     );
   }
 
@@ -30,12 +31,20 @@ export class UserService {
   }
   
   @log
-  static async updateUser(name: string, img: string): Promise<UserDto> {
+  static async updateUser(name: string, isSubscribed: boolean, img?: string): Promise<UserDto> {
+    console.log("Saving user settings:", { name, isSubscribed, img });
     return apiFetch<UserDto>(
       "/user/update",
       await RequestAttributes.builder()
-      .setBody({ name: name, img: img })
-      .setMethod("POST").addAuthHeader().build()
+      .setBody({ name: name, img: img, isSubscribed: isSubscribed })
+      .setMethod("POST")
+      .addHeader("Access-Control-Allow-Origin", FRONT_URL)
+      .addHeader("Access-Control-Allow-Credentials", "true")
+      .addHeader("Content-Type", "application/json")
+      .addHeader("Accept", "application/json")
+      .addHeader("Access-Control-Allow-Headers", "*")
+      .addHeader("Access-Control-Allow-Methods", "*")
+      .addAuthHeader().build()
     );
   }
 
@@ -68,22 +77,6 @@ export class UserService {
     return apiFetch<void>(
       "/user/removeReadStory?storyId=" + storyId,
       await RequestAttributes.builder().setMethod("POST").addAuthHeader().build()
-    );
-  }
-
-  @log
-  static async subscribe(): Promise<void> {
-    return apiFetch<void>(
-      "/user/subscribe",
-      await RequestAttributes.builder().setMethod("PUT").addAuthHeader().build()
-    );
-  }
-
-  @log
-  static async unsubscribe(): Promise<void> {
-    return apiFetch<void>(
-      "/user/unsubscribe",
-      await RequestAttributes.builder().setMethod("PUT").addAuthHeader().build()
     );
   }
 }

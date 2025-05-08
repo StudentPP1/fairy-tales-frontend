@@ -4,7 +4,7 @@ import { RequestAttributes } from "../utils/RequestAttributes";
 
 export async function refreshToken() {
   return await fetch(
-    `${API_BASE_URL}/auth/refresh-token`,
+    `${API_BASE_URL}/refresh-token`,
     await RequestAttributes.builder().setMethod("POST").build()
   ).then(async (result) => {
     const token = await result.json();
@@ -12,7 +12,7 @@ export async function refreshToken() {
       sessionStorage.clear();
       fetchErrorEvent.dispatchEvent(
         new CustomEvent("api-fetch-error", {
-          detail: { status: result.status, messages: token.message },
+          detail: { errorEntity: token },
         })
       );
     } else {

@@ -4,8 +4,8 @@ import type { StoryDto } from "@/model/StoryDto";
 import type { Page } from "@/model/Page";
 
 interface InfiniteStoriesSectionProps {
-  stories: StoryDto[];
-  setStories: React.Dispatch<React.SetStateAction<StoryDto[]>>;
+  stories: Page<StoryDto> | null;
+  setStories: React.Dispatch<React.SetStateAction<Page<StoryDto> | null>>;
   fetchMoreStories: (page: number, size: number) => Promise<Page<StoryDto>>;
   hasMore: boolean;
   setHasMore: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,7 +32,10 @@ const InfiniteStoriesSection: React.FC<InfiniteStoriesSectionProps> = ({
           const response = await fetchMoreStories(currentPage + 1, itemsPerPage);
           
           if (response.content.length > 0) {
-            setStories((prev) => [...prev, ...response.content]);
+            setStories((prev) => {
+              if (!prev) return null;
+              return { ...prev, content: [...prev.content, ...response.content] };
+            });
             setHasMore(!response.last);
             setCurrentPage(response.number);
           }
@@ -53,7 +56,7 @@ const InfiniteStoriesSection: React.FC<InfiniteStoriesSectionProps> = ({
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center">
-        {stories.map((story) => (
+        {stories?.content.map((story) => (
           <div key={story.id} className="w-full max-w-sm flex-shrink-0">
             <CardItem story={story} />
           </div>

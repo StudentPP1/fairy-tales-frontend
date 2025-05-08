@@ -104,7 +104,7 @@ const NavBar: FC = () => {
         <Button variant="ghost" className="p-2" onClick={() => {user ? navigate("/settings") : navigate("/login")}}>
           <Avatar className="cursor-pointer">
             <AvatarImage
-              src="https://cs4.pikabu.ru/post_img/big/2016/06/12/6/1465724507186691432.jpg"
+              src={user?.img || "https://via.placeholder.com/150"}
               alt="User Avatar"
               className="h-10 w-10"
             />

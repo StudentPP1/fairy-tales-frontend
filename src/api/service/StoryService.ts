@@ -9,7 +9,7 @@ export class StoryService {
   @log
   static async getStory(storyId: number): Promise<Story> {
     return apiFetch<Story>(
-      "/story/" + storyId,
+      "/story?storyId=" + storyId,
       await RequestAttributes.builder().addAuthHeader().build()
     );
   }
@@ -47,8 +47,8 @@ export class StoryService {
   }
 
   @log
-  static async createStory(title: string, description: string, imgUrl: string, text: string): Promise<void> {
-    return apiFetch<void>(
+  static async createStory(title: string, description: string, imgUrl: string, text: string): Promise<StoryDto> {
+    return apiFetch<StoryDto>(
       `/story/create`,
       await RequestAttributes.builder().setBody({
         title: title,
@@ -60,8 +60,8 @@ export class StoryService {
   }
 
   @log
-  static async updateStory(id: number, title: string, description: string, imgUrl: string, text: string): Promise<void> {
-    return apiFetch<void>(
+  static async updateStory(id: number, title: string, description: string, imgUrl: string, text: string): Promise<StoryDto> {
+    return apiFetch<StoryDto>(
       `/story/update`,
       await RequestAttributes.builder().setBody({
         id: id,
@@ -74,9 +74,9 @@ export class StoryService {
   }
 
   @log
-  static async deleteStory(storyId: number): Promise<void> {
-    return apiFetch<void>(
-      `/story/delete=${storyId}`,
+  static async deleteStory(storyId: number): Promise<string> {
+    return apiFetch<string>(
+      `/story/delete?storyId=${storyId}`,
       await RequestAttributes.builder().setMethod("DELETE").addAuthHeader().build()
     );
   }

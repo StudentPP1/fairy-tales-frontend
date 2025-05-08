@@ -41,10 +41,13 @@ export class RequestAttributes {
   }
 
   async build() {
+    console.log("Request method: " + this.method);
     if (this.method != "GET") {
       const result = await fetchCsrfToken();
-      this.addHeader("X-XSRF-TOKEN", result.token);
+      console.log("CSRF token: " + result.token);
+      this.addHeader("X-XSRF-TOKEN", result.token); // _csrf X-XSRF-TOKEN
     }
+    console.log("Request headers: " + JSON.stringify(this.headers));
     return {
       method: this.method,
       headers: this.headers,

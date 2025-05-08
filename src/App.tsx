@@ -1,4 +1,3 @@
-import AppRoutes from "./router/AppRoutes";
 import NavBar from "./components/NavBar";
 import { ToastContainer } from "react-toastify";
 import { useEffect, useState, type FC } from "react";
@@ -7,6 +6,7 @@ import { ACCESS_TOKEN_NAME } from "./constant/constants";
 import { refreshToken } from "./api/service/TokenService";
 import { UserService } from "./api/service/UserService";
 import { AuthContext } from "./context/AuthContext";
+import { AppRoutes } from "./router/AppRoutes";
 
 export const App: FC = () => {
   const [user, setUser] = useState<UserDto | null>(null);
@@ -24,12 +24,11 @@ export const App: FC = () => {
   }, [])
 
   return (
-    <>
+    <div>
       <ToastContainer theme="dark" style={{ zIndex: 1000 }} />
       <AuthContext.Provider value={{ user, setUser }}>
-      <NavBar/>
-      <AppRoutes />
+        <AppRoutes />
       </AuthContext.Provider>
-    </>
+    </div>
   )
 }

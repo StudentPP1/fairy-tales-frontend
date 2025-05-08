@@ -10,8 +10,7 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${url}`, attributes);
   const json = await response.json();
-  const status = response.status;
-
+  
   if (!response.ok) {
     if (retry) {
       try {
@@ -25,7 +24,7 @@ export async function apiFetch<T>(
 
     fetchErrorEvent.dispatchEvent(
       new CustomEvent("api-fetch-error", {
-        detail: { status, errorEntity: json },
+        detail: { errorEntity: response },
       })
     );
 

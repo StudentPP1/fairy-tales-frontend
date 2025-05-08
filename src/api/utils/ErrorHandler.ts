@@ -2,14 +2,21 @@ import type { HttpErrorResponse } from "@/model/HttpErrorResponse";
 import { toast } from "react-toastify";
 
 function defaultErrorHandler(errorEntity: HttpErrorResponse) {
-  toast.error(errorEntity.message, { position: "top-right" });
-  for (const [key, value] of Object.entries(errorEntity.errors || {})) {
-    toast.error(`${key}: ${value}`, { position: "top-right" });
+  if (errorEntity.message) {
+    toast.error(errorEntity.message, { position: "top-right" });
+    return;
   }
   if (errorEntity.generalErrors) {
     errorEntity.generalErrors.forEach((error) => {
       toast.error(error, { position: "top-right" });
     });
+    return;
+  }
+  if (errorEntity.errors) {
+    for (const [key, value] of Object.entries(errorEntity.errors || {})) {
+      toast.error(`${key}: ${value}`, { position: "top-right" });
+    }
+    return;
   }
 }
 
@@ -22,6 +29,6 @@ function onApiFetchError(listener: (event: CustomEvent) => void) {
 
 // add listener to the event
 onApiFetchError((event) => {
-  console.error("API Fetch Error:", event.detail);
+  console.error("API Fetch Error:", event.detail.errorEntity);
   defaultErrorHandler(event.detail.errorEntity);
 });

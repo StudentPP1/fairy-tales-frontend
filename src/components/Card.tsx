@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthContext, type AuthState } from "@/context/AuthContext";
 import type { StoryDto } from "@/model/StoryDto";
-import type { FC } from "react";
+import { useContext, type FC } from "react";
 
 import { Link } from "react-router-dom";
 
 const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
-    const user = false;
+    const user = useContext<AuthState>(AuthContext);
+
     return (
         <Link to={user ? `/story/${story.id}` : `/login`}>
             <Card
@@ -14,7 +16,7 @@ const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
             >
                 <div className="relative w-full h-60 overflow-hidden">
                     <img
-                        src={story.imageUrl}
+                        src={story.imgUrl}
                         alt={story.title}
                         loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"

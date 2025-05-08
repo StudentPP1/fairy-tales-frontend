@@ -1,5 +1,6 @@
 import { UserService } from "@/api/service/UserService";
 import CardItem from "@/components/Card";
+import NavBar from "@/components/NavBar";
 import type { StoryDto } from "@/model/StoryDto";
 import React, { useEffect, useState } from "react";
 
@@ -16,20 +17,23 @@ const LikedPage: React.FC = () => {
     }, [])
 
     return (
-        <div className="p-8">
-            <h1 className="text-3xl font-bold mb-4">Liked stories</h1>
-            <section>
-                <div className="container mx-auto px-4 py-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center">
-                        {stories.map((story) => (
-                            <div key={story.id} className="w-full max-w-sm flex-shrink-0">
-                                <CardItem story={story} />
-                            </div>
-                        ))}
+        <>
+            <NavBar />
+            <div className="p-8">
+                <h1 className="text-3xl font-bold mb-4">Liked stories</h1>
+                <section>
+                    <div className="container mx-auto px-4 py-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center">
+                            {stories.map((story) => (
+                                <div key={story.id} className="w-full max-w-sm flex-shrink-0">
+                                    <CardItem story={story} />
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </section>
+            </div>
+        </>
     );
 };
 
