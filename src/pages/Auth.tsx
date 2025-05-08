@@ -38,8 +38,8 @@ const AuthPage: React.FC = () => {
   };
 
   // Redirects to the backend Google OAuth endpoint
-  const handleGoogleAuth = () => {
-    AuthService.google()
+  const handleGoogleAuth = async () => {
+    await AuthService.google()
   };
 
   return (

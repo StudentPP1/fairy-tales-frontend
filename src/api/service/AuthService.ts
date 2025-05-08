@@ -41,13 +41,14 @@ export class AuthService {
       API_BASE_URL.replace("/api", "") +
       `/oauth2/authorize/google?redirect_uri=` +
       REDIRECT_URI;
+    console.log("AUTH_URL", AUTH_URL);
     window.location.href = AUTH_URL;
   }
 
   @log
   static async logout() {
     return apiFetch(
-      "/auth/logout",
+      "/logout",
       await RequestAttributes.builder().addAuthHeader().build()
     );
   }
