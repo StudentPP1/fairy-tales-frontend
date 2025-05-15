@@ -87,7 +87,7 @@ const StoryDetailsPage: FC = () => {
               <button
                 onClick={async () => {
                   setIsFavorite(!isFavorite)
-                  if (isFavorite) {
+                  if (!isFavorite) {
                     await UserService.addLikedStory(story.id);
                   }
                   else {

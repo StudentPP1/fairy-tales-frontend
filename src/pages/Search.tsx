@@ -2,7 +2,7 @@ import { StoryService } from "@/api/service/StoryService";
 import CardItem from "@/components/Card";
 import NavBar from "@/components/NavBar";
 import type { StoryDto } from "@/model/StoryDto";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const SearchPage: React.FC = () => {
