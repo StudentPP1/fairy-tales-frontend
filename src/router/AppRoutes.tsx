@@ -12,7 +12,6 @@ import ProtectedRoute from "./ProtectedRoute";
 
 export const AppRoutes = () => {
   const { user } = useContext(AuthContext);
-  console.log("user", user);
   return (
     <BrowserRouter>
       <Routes>

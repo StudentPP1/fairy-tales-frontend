@@ -73,9 +73,12 @@ const UserSettingsPage: FC = () => {
                     </Button>
                 </form>
 
-                <Button className="danger w-full p-5 mt-6 cursor-pointer" onClick={() => {
-                    AuthService.logout();
-                    navigate("/login", { replace: true });
+                <Button className="danger w-full p-5 mt-6 cursor-pointer" onClick={async () => {
+                    await AuthService.logout().then(() => {
+                        sessionStorage.clear()
+                        setUser(null)
+                        navigate("/", { replace: true });
+                    })
                 }}>
                     Log out
                 </Button>

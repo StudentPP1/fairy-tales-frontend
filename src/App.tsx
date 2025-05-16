@@ -7,16 +7,17 @@ import { refreshToken } from "./api/service/TokenService";
 import { UserService } from "./api/service/UserService";
 import { AuthContext } from "./context/AuthContext";
 import { AppRoutes } from "./router/AppRoutes";
+import { ThemeProvider } from "./components/theme-provider";
 
 export const App: FC = () => {
   const [user, setUser] = useState<UserDto | null>(null);
 
   useEffect(() => {
     console.log("refresh Token")
-    refreshToken().then(() => {
+    refreshToken().then(async () => {
       if (sessionStorage.getItem(ACCESS_TOKEN_NAME) != null) {
         console.log("get User")
-        UserService.getUser()
+        await UserService.getUser()
           .then((result: any) => { setUser(result) })
           .catch(() => { setUser(null) })
       }
@@ -25,10 +26,12 @@ export const App: FC = () => {
 
   return (
     <div>
-      <ToastContainer theme="dark" style={{ zIndex: 1000 }} />
-      <AuthContext.Provider value={{ user, setUser }}>
-        <AppRoutes />
-      </AuthContext.Provider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <ToastContainer theme="dark" style={{ zIndex: 1000 }} />
+        <AuthContext.Provider value={{ user, setUser }}>
+          <AppRoutes />
+        </AuthContext.Provider>
+      </ThemeProvider>
     </div>
   )
 }

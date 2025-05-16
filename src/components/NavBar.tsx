@@ -34,18 +34,18 @@ const NavBar: FC = () => {
     <nav className="flex items-center justify-between px-4 py-2 border-b">
       {/* Left: Logo & Create Story Button */}
       <div className="flex-1 flex justify-start items-center">
-        <div className="flex cursor-pointer" onClick={() => navigate("/")} role="button" tabIndex={0} aria-label="Home">
+        <div className="flex cursor-pointer" onClick={() => navigate("/")}
+          role="button" tabIndex={0} aria-label="Home">
           Home
         </div>
         {user?.role === "ADMIN" && (
-          <Button
-            variant="ghost"
-            role="button" tabIndex={1} aria-label="Create Story"
-            className="flex cursor-pointer"
+          <div
+            tabIndex={1} aria-label="Create Story"
+            className="flex cursor-pointer px-10"
             onClick={() => navigate("/create-story")}
           >
             Create Story
-          </Button>
+          </div>
         )}
       </div>
 
@@ -84,7 +84,7 @@ const NavBar: FC = () => {
 
       {/* Right: Heart Button & User Avatar */}
       <div className="flex-1 flex justify-end items-center">
-        <Button variant="ghost" className="p-2" onClick={() => {user ? navigate("/favorites") : navigate("/login")}}>
+        <Button variant="ghost" className="p-2" onClick={() => { user ? navigate("/favorites") : navigate("/login") }}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-red-500"
@@ -101,7 +101,7 @@ const NavBar: FC = () => {
           </svg>
         </Button>
 
-        <Button variant="ghost" className="p-2" onClick={() => {user ? navigate("/settings") : navigate("/login")}}>
+        <Button variant="ghost" className="p-2" onClick={() => { user ? navigate("/settings") : navigate("/login") }}>
           <Avatar className="cursor-pointer">
             <AvatarImage
               src={user?.img || "https://via.placeholder.com/150"}

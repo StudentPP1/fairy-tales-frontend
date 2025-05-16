@@ -28,8 +28,8 @@ const ChangeStory: FC<ChangeStoryProps> = ({
   setIsEditing,
 }) => {
   return (
-    <div className="p-8 max-w-3xl mx-auto bg-gray-50 min-h-screen">
-      <div className="bg-white shadow-lg rounded-lg p-6 space-y-4">
+    <div className="p-8 max-w-3xl mx-auto bg-gray min-h-screen">
+      <div className="bg-gray shadow-lg rounded-lg p-6 space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Title
