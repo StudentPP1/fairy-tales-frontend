@@ -80,7 +80,7 @@ const StoryDetailsPage: FC = () => {
           {/* Right Side: Title, Description, Icons & Admin Buttons */}
           <div className="md:w-2/3 w-full md:pl-6 mt-4 md:mt-0">
             <h1 className="text-4xl font-bold mb-4">{story.title}</h1>
-            <p className="text-gray-600 text-lg mb-4">{story.description}</p>
+            <p className="text-white text-lg mb-4">{story.description}</p>
 
             {/* Action Icons: Like/Unlike & Read/Unread */}
             <div className="flex items-center space-x-4">
@@ -190,8 +190,8 @@ const StoryDetailsPage: FC = () => {
         </div>
 
         {/* Second Block: Full Text */}
-        <div className="mt-6 bg-gray shadow-lg rounded-lg p-6">
-          <p className="text-gray-500 leading-relaxed">{story.text}</p>
+        <div className="mt-6 bg-gray-900 shadow-lg rounded-lg p-6">
+          <p className="text-gray leading-relaxed">{story.text}</p>
         </div>
       </div>
     </>
