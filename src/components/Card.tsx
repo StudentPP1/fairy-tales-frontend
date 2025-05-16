@@ -6,13 +6,13 @@ import { useContext, type FC } from "react";
 import { Link } from "react-router-dom";
 
 const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
-    const user = useContext<AuthState>(AuthContext);
+    const {user} = useContext<AuthState>(AuthContext);
 
     return (
         <Link to={user ? `/story/${story.id}` : `/login`}>
             <Card
                 key={story.id}
-                className="w-80 flex-shrink-0 rounded-lg shadow-lg bg-white hover:shadow-2xl transition duration-300 cursor-pointer"
+                className="w-80 flex-shrink-0 rounded-lg shadow-lg bg-gray hover:shadow-2xl transition duration-300 cursor-pointer"
             >
                 <div className="relative w-full h-60 overflow-hidden">
                     <img
@@ -23,9 +23,9 @@ const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
                     />
                 </div>
                 <CardHeader className="p-4">
-                    <CardTitle className="text-xl font-bold text-gray-800">
+                    <CardTitle className="text-xl font-bold text-white">
                         {story.title}
-                        <div className="flex items-center mt-2 text-gray-500">
+                        <div className="flex items-center mt-2 text-white">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="red"
@@ -47,7 +47,7 @@ const CardItem: FC<{ story: StoryDto }> = ({ story }) => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4">
-                    <p className="text-gray-600 text-sm">{story.description}</p>
+                    <p className="text-white text-sm truncate">{story.description}</p>
                 </CardContent>
             </Card>
         </Link>

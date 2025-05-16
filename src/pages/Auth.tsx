@@ -45,15 +45,8 @@ const AuthPage: React.FC = () => {
   return (
     <>
       <NavBar />
-      <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
-        <div className="relative bg-white p-6 rounded-md shadow-md w-full max-w-md">
-          {/* X Button to return to home */}
-          <button
-            onClick={() => navigate("/")}
-            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-lg"
-          >
-            &times;
-          </button>
+      <div className="min-h-screen bg-gray flex justify-center items-center p-4">
+        <div className="relative p-6 rounded-md shadow-md w-full max-w-md">
           <h2 className="text-2xl font-bold mb-4 text-center">
             {isRegistering ? "Register" : "Login"}
           </h2>

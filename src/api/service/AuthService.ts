@@ -49,7 +49,10 @@ export class AuthService {
   static async logout() {
     return apiFetch(
       "/logout",
-      await RequestAttributes.builder().setMethod("POST").addAuthHeader().build()
+      await RequestAttributes.builder()
+      .setMethod("POST")
+      .addAuthHeader()
+      .build()
     );
   }
 }

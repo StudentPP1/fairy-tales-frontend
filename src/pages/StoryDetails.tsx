@@ -65,9 +65,9 @@ const StoryDetailsPage: FC = () => {
   return (
     <>
       <NavBar />
-      <div className="p-8 mx-auto bg-gray-50 container">
+      <div className="p-8 mx-auto bg-gray container">
         {/* First Block */}
-        <div className="bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row">
+        <div className="bg-gray shadow-lg rounded-lg p-6 flex flex-col md:flex-row">
           {/* Left Side: Picture */}
           <div className="w-1/3 h-2/3 pr-4">
             <img
@@ -190,8 +190,8 @@ const StoryDetailsPage: FC = () => {
         </div>
 
         {/* Second Block: Full Text */}
-        <div className="mt-6 bg-white shadow-lg rounded-lg p-6">
-          <p className="text-gray-700 leading-relaxed">{story.text}</p>
+        <div className="mt-6 bg-gray shadow-lg rounded-lg p-6">
+          <p className="text-gray-500 leading-relaxed">{story.text}</p>
         </div>
       </div>
     </>
@@ -214,9 +214,10 @@ const StoryDetailsPage: FC = () => {
 
   async function handleDelete() {
     if (!story) return;
-    StoryService.deleteStory(story.id);
-    toast.success("Story deleted successfully!", { position: "top-right" });
-    navigate("/");
+    await StoryService.deleteStory(story.id).then(() => {
+      toast.success("Story deleted successfully!", { position: "top-right" });
+      navigate("/");
+    })
   }
 };
 

@@ -28,7 +28,7 @@ const SearchPage: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [search]);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -62,10 +62,10 @@ const SearchPage: React.FC = () => {
     <>
       <NavBar />
       <div className="p-8">
-        <h1 className="text-3xl font-bold mb-4">Search results</h1>
+        <h1 className="text-3xl font-bold mb-4 text-center">Search results</h1>
         {stories.length > 0 ? (
           <section>
-            <div className="container mx-auto px-4 py-8">
+            <div className="relative w-full flex items-center justify-center">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center">
                 {stories.map((story) => (
                   <div key={story.id} className="w-full max-w-sm flex-shrink-0">
